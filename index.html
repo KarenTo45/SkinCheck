@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>SkinCheck: Análisis Inteligente de Lesiones Cutáneas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Online image analyzer of the three most likely diagnoses for a skin lesion.">
+
+    <!--Código para evitar caché-->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link href="css/inicio.css" rel="stylesheet" type="text/css" />
+    <link href="css/slider.css" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/bee.css">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="logoinub2.jpg">
+    <style>
+        html, body, h2, h3, h4 , ul li{
+            font-family: Helvetica, sans-serif;
+			background-color: #ffff;
+			margin-bottom: 20px;
+
+        }
+
+        /* Estilo para la barra lateral */
+        .sidebar {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #f1f1f1;
+            padding-top: 20px;
+        }
+
+        .sidebar button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            text-align: left;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .sidebar button:hover {
+            background-color: #ddd;
+        }
+
+        .sidebar button.active {
+            background-color: #ccc;
+        }
+
+        .main-content {
+            margin-left: 220px; /* Espacio para la barra lateral */
+            padding: 20px;
+			background-color: #ffff;
+        }
+
+        .tab-content {
+            display: none;
+			background-color: #ffff;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+		.disease {
+           margin-bottom: 20px;
+           padding: 10px;
+           background-color: #f9f9f9;
+           border: 1px solid #ddd;
+           border-radius: 8px;
+        }
+
+        .disease h3 {
+          color: #333;
+          font-size: 20px;
+        }
+
+        .symptoms p {
+          margin: 5px 0;
+        }
+
+        .symptoms b {
+         color: #333;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Barra lateral izquierda -->
+    <div class="sidebar">
+        <button class="tablinks active" onclick="openTab(event, 'prediction')">Modelo de Predicción</button>
+        <button class="tablinks" onclick="openTab(event, 'information')">Información sobre Enfermedades</button>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Contenido de la pestaña 1: Modelo de Predicción -->
+        <div id="prediction" class="tab-content active">
+            <div class="w3-center title" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+				<h1 class="space-letters tag-font w3-text-black"><b>SkinCheck: Análisis Inteligente de Lesiones Cutáneas</b></h1>
+				<h4 class="space-letters w3-text-black">Analizador de imágenes en línea de los tres diagnósticos más probables para una lesión en la piel</h4>
+				<h4 class="space-letters w3-text-black"><b>Integrantes</b>: Ian David Colina y Karen Manuela Torres</h4>
+				<img id="selected-image" class="w3-round adjust-image" src="assets/samplepic.jpg" alt="" style="max-width: 100%; height: auto;">
+			</div>
+
+            <div class="w3-center">
+                <div class="progress-bar">Modelo con Inteligencia Artificial cargando...</div>
+            </div>
+
+            <div class="add-padding w3-border w3-round w3-pale-blue">
+                <h5><b>Resultados</b></h5>
+                <ol id="prediction-list"></ol>
+            </div>
+
+            <div class="w3-center">
+                <button class="w3-btn w3-blue w3-round w3-hover-green" onclick="simulateClick('image-selector')">
+                    <i class='fas fa-camera'></i> Enviar una imagen de una lesión en la piel
+                </button>
+            </div>
+
+            <div class="hide">
+                <button id='predict-button'>Predict</button>
+                <input id="image-selector" type="file">
+            </div>
+        
+
+		 <div class='w3-padding w3-border w3-round w3-light-grey'>
+			<h5 class="space-letters tag-font w3-text-black"><b>Caracteristicas técnicas del Modelo:</b></h5>
+			<h5 class="space-letters tag-font w3-text-black"><b>- Exactitud: 0.89 </b></h5>
+			<h5 class="space-letters tag-font w3-text-black"><b>- Presición: 0.88 </b></h5>
+			<h5 class="space-letters tag-font w3-text-black"><b>- Sensibilidad: 0.86 </b></h5>
+			<h6 class="space-letters tag-font w3-text-black"><b>El entrenamiento del modelo está basado en el conjunto de 10015 imágenes dermatoscópicas de Harvard, entrenado con Tensorflow</b></h6>
+		 </div>
+	    </div> 
+
+        <!-- Contenido de la pestaña 2: Información sobre Enfermedades -->
+        <div id="information" class="tab-content">
+            <h2 class="space-letters tag-font w3-text-black">Tipos de lesiones cutáneas o tumores en la piel</h2>
+            <div class="disease">
+				<h3><b>AKIEC:</b></h3>
+				<p>La queratosis actínica (AK) es una afección de la piel debido a la exposición crónica al sol. Se caracteriza por parches ásperos y escamosos de piel en áreas expuestas al sol, como la cara, las manos y los brazos. También se conoce como queratosis solar o carcinoma intraepitelial (en su forma más avanzada, conocido como enfermedad de Bowen).</p>
+				<div class="symptoms">
+					<p><b>Síntomas:</b> Pequeñas manchas secas, escamosas y ásperas en la piel. Pueden variar en color, desde el rojo hasta el marrón, y a veces se sienten como un área rugosa o arenosa.</p>
+					<p><b>Riesgo:</b> Aunque la mayoría de las AK no se transforman en cáncer, algunas pueden progresar a carcinoma de células escamosas, un tipo de cáncer de piel.</p>
+				</div>
+			</div>
+			
+			<div class="disease">
+				<h3><b>Basal Cell Carcinoma (BCC):</b></h3>
+				<p>El carcinoma basocelular es el tipo más común de cáncer de piel. Se desarrolla a partir de las células basales, que se encuentran en la capa más profunda de la epidermis. Generalmente se presenta como una úlcera o una protuberancia pequeña, con una superficie perlada o translúcida.</p>
+				<div class="symptoms">
+					<p><b>Síntomas:</b> Una protuberancia nacarada, a menudo con pequeños vasos sanguíneos visibles. También puede presentarse como una úlcera que no cicatriza o una lesión que sangra fácilmente.</p>
+					<p><b>Riesgo:</b> Aunque raramente se disemina a otras partes del cuerpo, puede crecer y destruir tejidos circundantes si no se trata.</p>
+				</div>
+			</div>
+			
+			<div class="disease">
+				<h3><b>Benign Keratosis (Queratosis Benigna):</b></h3>
+				<p>La queratosis benigna es una condición común de la piel caracterizada por el crecimiento de lesiones elevadas, de bordes bien definidos, generalmente de color marrón, negro o amarillo. Son benignas y no son cancerosas.</p>
+				<div class="symptoms">
+					<p><b>Síntomas:</b> Son lesiones redondas o de forma irregular que varían en color. Pueden tener una superficie rugosa y a menudo se sienten como "granos" o "protuberancias".</p>
+					<p><b>Riesgo:</b> Aunque son benignas, pueden confundirse con cáncer de piel, por lo que deben ser evaluadas por un dermatólogo.</p>
+				</div>
+			</div>
+			
+			<div class="disease">
+				<h3><b>Dermatofibroma:</b></h3>
+				<p>El dermatofibroma es un tumor benigno de la piel que se origina en las células fibrosas de la dermis. A menudo se presenta como una protuberancia dura, de color marrón o rojizo.</p>
+				<div class="symptoms">
+					<p><b>Síntomas:</b> Suele ser una pequeña protuberancia, de aproximadamente 1 a 2 cm, de color marrón, que puede sentirse áspera o firme al tacto. A veces, se asocia con picazón o dolor.</p>
+					<p><b>Riesgo:</b> Son lesiones benignas y no se asocian con cáncer, aunque su aparición puede estar relacionada con una respuesta inflamatoria a un trauma.</p>
+				</div>
+			</div>
+			
+			<div class="disease">
+				<h3><b>Melanoma:</b></h3>
+				<p>El melanoma es un tipo de cáncer de piel que se origina en los melanocitos, las células productoras de pigmento en la piel. Es mucho menos común que otros tipos de cáncer de piel, pero es mucho más peligroso debido a su alta capacidad de propagación.</p>
+				<div class="symptoms">
+					<p><b>Síntomas:</b> Los melanomas suelen aparecer como una nueva mancha o un cambio en un lunar existente. Son asimétricos, con bordes irregulares, varios colores y un tamaño superior a 6 mm.</p>
+					<p><b>Riesgo:</b> Es uno de los tipos de cáncer de piel más graves, ya que puede diseminarse rápidamente a otros órganos si no se detecta a tiempo.</p>
+				</div>
+			</div>
+			
+			<div class="disease">
+				<h3><b>Melanocytic Nevi (Nevo Melanocítico o Lunar):</b></h3>
+				<p>Los nevos melanocíticos son manchas o lunares benignos que se desarrollan en la piel a partir de los melanocitos. Son comunes y suelen aparecer durante la infancia o la adolescencia.</p>
+				<div class="symptoms">
+					<p><b>Síntomas:</b> Los lunares pueden ser de color marrón, negro o beige y tener bordes bien definidos. Son generalmente redondos o ovalados, y su tamaño puede variar.</p>
+					<p><b>Riesgo:</b> En su mayoría son benignos, pero algunos pueden volverse melanoma si cambian de forma, color o tamaño. Es importante observar cualquier cambio en los lunares existentes.</p>
+				</div>
+			</div>
+			
+			
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.3/dist/tf.min.js"></script>
+    <script src="jscript/target_classes.js"></script>
+    <script src="jscript/predict100.js"></script>
+
+    <script>
+        // Función para cambiar entre pestañas
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</body>
+
+</html>
